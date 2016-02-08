@@ -11,9 +11,41 @@
                 padding: 0;
             }
             #map {
-                height: 800px;
+                height: 100%;
             }
         
+            #wrapper{
+                position: relative;
+            }
+
+            #layertoggles {
+
+                position: absolute; 
+                top: 10px; 
+                right: 10px; 
+                z-index: 99;
+                margin-top: 10px;
+                margin-right: 12px;
+                
+                background-color: #fff;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                
+                padding: 0 11px 11px 13px;
+                text-overflow: ellipsis; 
+                
+                width: auto;
+                height: auto;
+                
+                border: 1px solid transparent;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+
+                outline: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
             .controls {
                 margin-top: 10px;
                 border: 1px solid transparent;
@@ -63,9 +95,11 @@
 // Brendan Quigley
 // ---------------------------------------------------------------------------------------------//
 var map;
-   
+var updateIndicator = 0;
+
     // Creates Map
 function initMap(){
+    if (updateIndicator === 0){
     //Set Defaults
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 44.300, lng: -78.320},
@@ -82,8 +116,12 @@ ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0
 ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
 
 var ptboBoundcheck = document.getElementById('ptboBound').checked;
-var ptboAreascheck = document.getElementById('ptboAreas').checked
-    
+var ptboAreascheck = document.getElementById('ptboAreas').checked;
+
+
+// ---------------------------------------------------------------------------------------------//
+// Check to see if checkboxes are checked and enable that layer
+// ---------------------------------------------------------------------------------------------//
 if (ptboBoundcheck === true){
     ptboBound.setMap(map);
 }
@@ -91,8 +129,6 @@ if (ptboBoundcheck === true){
 if (ptboAreascheck === true){
     ptboAreas.setMap(map);
 }
-
-    //ptboAreas.setMap(map); //Default visible
           
 // ---------------------------------------------------------------------------------------------//
 // Style Based on Fields in the GeoJson Layers
@@ -129,7 +165,7 @@ ptboAreas.addListener('mouseover', function(event) {
     ptboAreas.overrideStyle(event.feature, {strokeWeight: 3});
   });
 
- ptboAreas.addListener('mouseout', function(event) {
+ptboAreas.addListener('mouseout', function(event) {
     ptboAreas.revertStyle();
   });
 
@@ -218,20 +254,53 @@ ptboAreas.addListener('click', function(event) {
     
 // ---------------------------------------------------------------------------------------------//
 
-}
-
-
-            
+    updateIndicator = 1;
+    } // If updateIndicator === 0
+else if (updateIndicator === 1){
+         console.log("Entering Else");
     
+       ptboBound.setMap(null);
+       ptboAreas.setMap(null);
+
+// ---------------------------------------------------------------------------------------------//
+// Check to see if checkboxes are checked and enable that layer
+// ---------------------------------------------------------------------------------------------//
+if (ptboBoundcheck === true){
+    ptboBound.setMap(map);
+};
+
+if (ptboAreascheck === true){
+    ptboAreas.setMap(map);
+};
+    
+}; // Else IF End
+    
+}// [END initialize function]
+    
+  
 </script>
       
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWsmUQGloSkSNBsq_ukt2ZjvLQpYoPbLg&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWsmUQGloSkSNBsq_ukt2ZjvLQpYoPbLg&libraries=places,drawing,geometry&callback=initMap" async defer></script>
   
     </head>
 
     <body>
-        ptboBound <input type="checkbox" id="ptboBound" onclick="initMap()">
-        ptboAreas <input type="checkbox" id="ptboAreas" onclick="initMap()">
+        <div id="wrapper">
+            <div id="layertoggles">
+                <table>
+                    <tr>
+                        <td><h2>Community Layers</h2></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="ptboBound" onclick="initMap()" checked> PTBO Boundary</td>
+                          
+                    </tr> 
+                    <tr>
+                        <td><input type="checkbox" id="ptboAreas" onclick="initMap()"> PTBO Community Areas</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map"></div>
     </body>
