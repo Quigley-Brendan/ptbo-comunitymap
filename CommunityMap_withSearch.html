@@ -81,8 +81,18 @@ var ptboAreas = new google.maps.Data();
 ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
 ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
 
-ptboBound.setMap(map); //Default visible
-ptboAreas.setMap(null); //Default visible
+var ptboBoundcheck = document.getElementById('ptboBound').checked;
+var ptboAreascheck = document.getElementById('ptboAreas').checked
+    
+if (ptboBoundcheck === true){
+    ptboBound.setMap(map);
+}
+
+if (ptboAreascheck === true){
+    ptboAreas.setMap(map);
+}
+
+    //ptboAreas.setMap(map); //Default visible
           
 // ---------------------------------------------------------------------------------------------//
 // Style Based on Fields in the GeoJson Layers
@@ -208,19 +218,8 @@ ptboAreas.addListener('click', function(event) {
     
 // ---------------------------------------------------------------------------------------------//
 
-
 }
 
-    //var toggleLayer = function(checkboxId){
-    //var checkboxId = 'ptboAreas';
-    
-    //if (document.getElementById(checkboxId).checked === true){
-    //    ptboLayers[2].setMap(map);
-    //}
-    //else{
-    //    ptboLayers[2].setMap(null);
-    //}
-    //    }
 
             
     
@@ -231,8 +230,8 @@ ptboAreas.addListener('click', function(event) {
     </head>
 
     <body>
-        ptboBound <input type="checkbox" id="ptboBound" onclick="toggleLayer()" checked>
-        ptboAreas <input type="checkbox" id="ptboAreas" onclick="toggleLayer()">
+        ptboBound <input type="checkbox" id="ptboBound" onclick="initMap()">
+        ptboAreas <input type="checkbox" id="ptboAreas" onclick="initMap()">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map"></div>
     </body>
