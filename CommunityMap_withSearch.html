@@ -1,84 +1,95 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 800px;
-      }
+    <head>
+        <title>Simple Map</title>
+        <meta name="viewport" content="initial-scale=1.0">
+        <meta charset="utf-8">
+            <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #map {
+                height: 800px;
+            }
         
-.controls {
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 32px;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
+            .controls {
+                margin-top: 10px;
+                border: 1px solid transparent;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                height: 32px;
+                outline: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
 
-#pac-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 300px;
-}
+            #pac-input {
+                background-color: #fff;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                margin-left: 12px;
+                padding: 0 11px 0 13px;
+                text-overflow: ellipsis;
+                width: 300px;
+            }
 
-#pac-input:focus {
-  border-color: #4d90fe;
-}
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
 
-.pac-container {
-  font-family: Roboto;
-}
+            .pac-container {
+                font-family: Roboto;
+            }
 
-#type-selector {
-  color: #fff;
-  background-color: #4d90fe;
-  padding: 5px 11px 0px 11px;
-}
+            #type-selector {
+                color: #fff;
+                background-color: #4d90fe;
+                padding: 5px 11px 0px 11px;
+            }
 
-#type-selector label {
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 300;
-}
-    </style>
+            #type-selector label {
+                font-family: Roboto;
+                font-size: 13px;
+                font-weight: 300;
+            }
+            </style>
 
-    <script>
-
+<script>
 // ---------------------------------------------------------------------------------------------//
-// Comuunity Map Code
+// Comuunity Map JS Code
 // Brendan Quigley
 // ---------------------------------------------------------------------------------------------//
 var map;
-        
-function initAutocomplete() {
+   
+    // Creates Map
+function initMap(){
+    //Set Defaults
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 44.300, lng: -78.320},
         zoom: 12
     });
-          
-          
-map.data.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
-map.data.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
+
+// ---------------------------------------------------------------------------------------------//
+// Create data objects for each layer
+// ---------------------------------------------------------------------------------------------//
+var ptboBound = new google.maps.Data();
+var ptboAreas = new google.maps.Data();
+    
+ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
+ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
+
+ptboBound.setMap(map); //Default visible
+ptboAreas.setMap(null); //Default visible
           
 // ---------------------------------------------------------------------------------------------//
 // Style Based on Fields in the GeoJson Layers
 // ---------------------------------------------------------------------------------------------//
-map.data.setStyle(function(feature) {
+
+    // Sets ptboBounds Styles
+ptboBound.setStyle(function(feature) {
     return /** @type {google.maps.Data.StyleOptions} */({
         fillColor: feature.getProperty('color'),
         fillOpacity: feature.getProperty('Opacity'),
@@ -86,31 +97,46 @@ map.data.setStyle(function(feature) {
         strokeWeight: 1
         
     });
-});  
+});
+
+    // Sets ptboAreas Styles
+ptboAreas.setStyle(function(feature) {
+    return /** @type {google.maps.Data.StyleOptions} */({
+        fillColor: feature.getProperty('color'),
+        fillOpacity: feature.getProperty('Opacity'),
+        strokeWeight: 1
+        
+    });
+}); 
 
 // ---------------------------------------------------------------------------------------------//
-// On hover, show selection
+// On mouseover indicated selected area
 // ---------------------------------------------------------------------------------------------//
-  map.data.addListener('mouseover', function(event) {
-    map.data.revertStyle();
-    map.data.overrideStyle(event.feature, {strokeWeight: 2});
+
+    //Increases the stroke weight on ptboAreas features on mouseover
+ptboAreas.addListener('mouseover', function(event) {
+    ptboAreas.revertStyle();
+    ptboAreas.overrideStyle(event.feature, {strokeWeight: 3});
   });
 
-  map.data.addListener('mouseout', function(event) {
-    map.data.revertStyle();
+ ptboAreas.addListener('mouseout', function(event) {
+    ptboAreas.revertStyle();
   });
 
 // ---------------------------------------------------------------------------------------------// 
 // Info Window    
 // ---------------------------------------------------------------------------------------------//      
-    
+
+    // Click anywhere on the map to remove the info window
 google.maps.event.addListener(map, 'click', function() {
   infowindow.close();
 });
    
-var infowindow = new google.maps.InfoWindow(); //For info window
-    
-map.data.addListener('click', function(event) {
+    //One info window variable only allows for one window to be open at one time
+var infowindow = new google.maps.InfoWindow();
+
+    // Show info window for ptboAreas    
+ptboAreas.addListener('click', function(event) {
     infowindow.setContent(event.feature.getProperty('Name')+'<br><br>A description.');
     infowindow.setPosition(event.latLng);
     infowindow.setOptions({pixelOffset: new google.maps.Size(0,-34)});
@@ -118,7 +144,6 @@ map.data.addListener('click', function(event) {
 });
 
 
-    
 // ---------------------------------------------------------------------------------------------// 
 // Google Search Box Code     
 // ---------------------------------------------------------------------------------------------//    
@@ -182,20 +207,34 @@ map.data.addListener('click', function(event) {
 // [END region_getplaces]  
     
 // ---------------------------------------------------------------------------------------------//
-// ---------------------------------------------------------------------------------------------//
-    }
-google.maps.event.addDomListener(window, 'load', initialize);
-        
-    </script>
+
+
+}
+
+    //var toggleLayer = function(checkboxId){
+    //var checkboxId = 'ptboAreas';
+    
+    //if (document.getElementById(checkboxId).checked === true){
+    //    ptboLayers[2].setMap(map);
+    //}
+    //else{
+    //    ptboLayers[2].setMap(null);
+    //}
+    //    }
+
+            
+    
+</script>
       
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWsmUQGloSkSNBsq_ukt2ZjvLQpYoPbLg&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWsmUQGloSkSNBsq_ukt2ZjvLQpYoPbLg&libraries=places&callback=initMap" async defer></script>
   
     </head>
 
     <body>
+        ptboBound <input type="checkbox" id="ptboBound" onclick="toggleLayer()" checked>
+        ptboAreas <input type="checkbox" id="ptboAreas" onclick="toggleLayer()">
         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
         <div id="map"></div>
-
     </body>
 
 </html>
