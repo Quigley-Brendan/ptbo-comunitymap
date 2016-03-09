@@ -17,14 +17,14 @@ function initMap() {
     // ---------------------------------------------------------------------------------------------//
     // Create data objects for each layer
     // ---------------------------------------------------------------------------------------------//
-    var ptboBound = new google.maps.Data();
-    var ptboAreas = new google.maps.Data();
+    ptboBound = new google.maps.Data();
+    ptboAreas = new google.maps.Data();
 
     ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
     ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
 
-    var ptboBoundcheck = document.getElementById('ptboBound').checked;
-    var ptboAreascheck = document.getElementById('ptboAreas').checked;
+    ptboBoundcheck = document.getElementById('ptboBound').checked;
+    ptboAreascheck = document.getElementById('ptboAreas').checked;
 
     // ---------------------------------------------------------------------------------------------//
     // Check to see if checkboxes are checked and enable that layer
@@ -162,6 +162,10 @@ function initMap() {
             }
         });
         map.fitBounds(bounds);
+        var listener = google.maps.event.addListener(map, "idle", function() { 
+          if (map.getZoom() > 16) map.setZoom(16); 
+          google.maps.event.removeListener(listener); 
+});
     });
     // [END region_getplaces]  
 
@@ -177,3 +181,23 @@ function initMap() {
     };
 
 }// [END initialize function]
+
+function addPTBOAreas(){
+    
+    if (document.getElementById('ptboAreas').checked === true) {
+        ptboAreas.setMap(map);
+    } 
+    else {
+        ptboAreas.setMap(null);
+    }
+}
+
+function layerToggle(){
+    
+    if (document.getElementById('ptboAreas').checked === true) {
+        ptboAreas.setMap(map);
+    } 
+    else {
+        ptboAreas.setMap(null);
+    }
+}
