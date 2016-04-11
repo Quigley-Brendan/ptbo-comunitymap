@@ -7,10 +7,7 @@ var map;
 function initMap() {
     //Set Defaults
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {
-            lat: 44.300,
-            lng: -78.320
-        },
+        center: {lat: 44.300, lng: -78.320},
         zoom: 12
     });
 
@@ -19,26 +16,25 @@ function initMap() {
     // ---------------------------------------------------------------------------------------------//
     ptboBound = new google.maps.Data();
     ptboAreas = new google.maps.Data();
+    ptboCatholicElementary = new google.maps.Data();
+    //ptboCatholicSecondary = new google.maps.Data();
+    //ptboPublicElementary = new google.maps.Data();
+    //ptboPublicSecondary = new google.maps.Data();
 
+    var allLayers = ["ptboBound", "ptboAreas", "ptboCatholicElementary","ptboCatholicSecondary","ptboPublicElementary","ptboPublicSecondary" ]
+    
+    // ---------------------------------------------------------------------------------------------//
+    // Load Layers
+    // ---------------------------------------------------------------------------------------------//
     ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
     ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
-
-    ptboBoundcheck = document.getElementById('ptboBound').checked;
-    ptboAreascheck = document.getElementById('ptboAreas').checked;
-
-    // ---------------------------------------------------------------------------------------------//
-    // Check to see if checkboxes are checked and enable that layer
-    // ---------------------------------------------------------------------------------------------//
-    if (ptboBoundcheck === true) {
-        ptboBound.setMap(map);
-    }
-
-    if (ptboAreascheck === true) {
-        ptboAreas.setMap(map);
-    }
+    ptboCatholicElementary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CatholicElementary.geojson');
+    //ptboCatholicSecondary.loadGeoJson('')
+    //ptboPublicElementary.loadGeoJson('')
+    //ptboPublicSecondary.loadGeoJson('')
 
     // ---------------------------------------------------------------------------------------------//
-    // Style Based on Fields in the GeoJson Layers
+    // Set Boundary as Default Layer
     // ---------------------------------------------------------------------------------------------//
 
     // Sets ptboBounds Styles
@@ -51,30 +47,22 @@ function initMap() {
 
         });
     });
-
-    // Sets ptboAreas Styles
-    ptboAreas.setStyle(function (feature) {
-        return /** @type {google.maps.Data.StyleOptions} */ ({
-            fillColor: feature.getProperty('color'),
-            fillOpacity: feature.getProperty('Opacity'),
-            strokeWeight: 1
-
-        });
-    });
-
-    // ---------------------------------------------------------------------------------------------//
-    // On mouseover indicated selected area by increaing the stroke weight
-    // ---------------------------------------------------------------------------------------------//
-    ptboAreas.addListener('mouseover', function (event) {
-        ptboAreas.revertStyle();
-        ptboAreas.overrideStyle(event.feature, {
+    
+    //Sets ptboBounds Mouseover
+    ptboBound.addListener('mouseover', function (event) {
+    ptboBound.revertStyle();
+    ptboBound.overrideStyle(event.feature, {
             strokeWeight: 3
         });
     });
 
-    ptboAreas.addListener('mouseout', function (event) {
-        ptboAreas.revertStyle();
+    ptboBound.addListener('mouseout', function (event) {
+    ptboBound.revertStyle();
     });
+    
+    //Sets ptboBounds layer as active
+    ptboBound.setMap(map);
+
 
     // ---------------------------------------------------------------------------------------------// 
     // Info Window    
@@ -85,20 +73,32 @@ function initMap() {
         infowindow.close();
     });
 
-    //One info window variable only allows for one window to be open at one time
+    // One info window variable only allows for one window to be open at one time
     var infowindow = new google.maps.InfoWindow({
         maxWidth: 325
     });
 
-    // Show info window for ptboAreas    
+    // ptboAreas Info Window   
     ptboAreas.addListener('click', function (event) {
-        infowindow.setContent(
-            '<strong>' + event.feature.getProperty('Name') + '</strong><br><br>' + event.feature.getProperty('Des1') + ' ' + event.feature.getProperty('Des2'));
+    infowindow.setContent('<strong>' + event.feature.getProperty('Name') + '</strong><br><br>' + event.feature.getProperty('Des1') + ' ' + event.feature.getProperty('Des2'));
 
         infowindow.setPosition(event.latLng);
         infowindow.setOptions({
-            pixelOffset: new google.maps.Size(0, -34)
+        pixelOffset: new google.maps.Size(0, -34)
         });
+        
+        infowindow.open(map);
+    });
+    
+    // ptboCatholicElementary Info Window    
+    ptboCatholicElementary.addListener('click', function (event) {
+        infowindow.setContent('<strong>' + event.feature.getProperty('Name') + '</strong><br><br>' + event.feature.getProperty('City'));
+
+        infowindow.setPosition(event.latLng);
+        infowindow.setOptions({
+        pixelOffset: new google.maps.Size(0, -34)
+        });
+        
         infowindow.open(map);
     });
 
@@ -167,37 +167,46 @@ function initMap() {
           google.maps.event.removeListener(listener); 
 });
     });
-    // [END region_getplaces]  
-
-    // ---------------------------------------------------------------------------------------------//
-    // Check to see if checkboxes are checked and enable that layer
-    // ---------------------------------------------------------------------------------------------//
-    if (ptboBoundcheck === true) {
-        ptboBound.setMap(map);
-    };
-
-    if (ptboAreascheck === true) {
-        ptboAreas.setMap(map);
-    };
+    // [END region_getplaces]      
 
 }// [END initialize function]
 
-function addPTBOAreas(){
+
+// Changes Active Layer on Map
+function addLayer(layer){
+    ptboAreas.setMap(null);
+    ptboBound.setMap(null);
+    ptboCatholicElementary.setMap(null);
+    setLayerStyle(layer);//Styles new active layer before displaying
+    setMouseover(layer);//Sets Mouseover before displaying
+    layer.setMap(map);
     
-    if (document.getElementById('ptboAreas').checked === true) {
-        ptboAreas.setMap(map);
-    } 
-    else {
-        ptboAreas.setMap(null);
-    }
 }
 
-function layerToggle(){
-    
-    if (document.getElementById('ptboAreas').checked === true) {
-        ptboAreas.setMap(map);
-    } 
-    else {
-        ptboAreas.setMap(null);
+// Styles layers based on attributes in the geojson file
+function setLayerStyle(layer){
+    layer.setStyle(function (feature) {
+        return /** @type {google.maps.Data.StyleOptions} */ ({
+            fillColor: feature.getProperty('Color'),
+            fillOpacity: feature.getProperty('Opacity'),
+            strokeColor: feature.getProperty('St_Color'),
+            strokeWeight: feature.getProperty('St_Weight'),
+            strokeOpacity: feature.getProperty('St_Opacity')
+        });
+    });
     }
+
+//Sets mouseover for layers
+function setMouseover(layer){   
+    layer.addListener('mouseover', function (event) {
+    layer.revertStyle();
+    layer.overrideStyle(event.feature, {
+            strokeWeight: 3
+        });
+    });
+
+    layer.addListener('mouseout', function (event) {
+    layer.revertStyle();
+    });    
 }
+
