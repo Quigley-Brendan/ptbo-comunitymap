@@ -17,7 +17,7 @@ function initMap() {
     ptboBound = new google.maps.Data();
     ptboAreas = new google.maps.Data();
     ptboCatholicElementary = new google.maps.Data();
-    //ptboCatholicSecondary = new google.maps.Data();
+    ptboCatholicSecondary = new google.maps.Data();
     //ptboPublicElementary = new google.maps.Data();
     //ptboPublicSecondary = new google.maps.Data();
 
@@ -26,10 +26,11 @@ function initMap() {
     // ---------------------------------------------------------------------------------------------//
     // Load Layers
     // ---------------------------------------------------------------------------------------------//
+   
     ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
     ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
-    ptboCatholicElementary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CatholicElementary.geojson');
-    //ptboCatholicSecondary.loadGeoJson('')
+    ptboCatholicElementary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CElementary.geojson');
+    ptboCatholicSecondary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CSecondary.geojson')
     //ptboPublicElementary.loadGeoJson('')
     //ptboPublicSecondary.loadGeoJson('')
 
@@ -102,6 +103,17 @@ function initMap() {
         infowindow.open(map);
     });
 
+        // ptboCatholicSecondary Info Window    
+    ptboCatholicSecondary.addListener('click', function (event) {
+        infowindow.setContent('<strong>' + event.feature.getProperty('Secondary'));
+
+        infowindow.setPosition(event.latLng);
+        infowindow.setOptions({
+        pixelOffset: new google.maps.Size(0, -34)
+        });
+        
+        infowindow.open(map);
+    });
 
     // ---------------------------------------------------------------------------------------------// 
     // Google Search Box Code     
@@ -177,6 +189,7 @@ function addLayer(layer){
     ptboAreas.setMap(null);
     ptboBound.setMap(null);
     ptboCatholicElementary.setMap(null);
+    ptboCatholicSecondary.setMap(null);
     setLayerStyle(layer);//Styles new active layer before displaying
     setMouseover(layer);//Sets Mouseover before displaying
     layer.setMap(map);
