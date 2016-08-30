@@ -1,1 +1,50 @@
-Hello World
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PTBO Community Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWsmUQGloSkSNBsq_ukt2ZjvLQpYoPbLg&libraries=places,drawing,geometry&callback=initMap" async defer></script>
+    <script src="Community_Map.js"></script>
+    <link rel="stylesheet" type="text/css" href="Community_Map.css">
+</head>
+
+<body>
+        <div class="menuarea" id="layertoggles">
+            <h2 style="color: #fff;">Community Map</h2>
+            <p style="color: #fff;">Click on each area to see additional details. <strong>School zone maps coming soon.</strong></p>
+            <table>
+                <tr>
+                    <td class="goodlayers"><label><input type="radio" id="ptboBound" onclick="addLayer(ptboBound)" name="layers" checked> PTBO Boundary</label><br>
+                    </td>
+                    
+                    <td class="goodlayers"><label><input type="radio" id="ptboCatholicElementary" onclick="addLayer(ptboCatholicElementary)" name="layers">Catholic Elementary School Zones</label>
+                    </td>
+                    <td class="comingsoon"><label><input  type="radio" id="ptboBound" onclick="" name="layers">Public Elementary School Zones</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="goodlayers"><label><input type="radio" id="ptboAreas" onclick="addLayer(ptboAreas)" name="layers"> PTBO Community Areas</label>
+                    </td>
+                    
+                    <td class="goodlayers"><label><input type="radio" id="ptboCatholicSecondary" onclick="addLayer(ptboCatholicSecondary)" name="layers">Catholic Secondary School Zones</label>
+                    </td>
+                    <td class="comingsoon"><label><input type="radio" id="ptboBound" onclick="" name="layers">Public Secondary School Zones</label>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+
+
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map"></div>
+
+    <script>
+        initMap()
+    </script>
+</body>
+
+</html>
