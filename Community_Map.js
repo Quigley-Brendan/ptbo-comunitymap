@@ -27,10 +27,10 @@ function initMap() {
     // Load Layers
     // ---------------------------------------------------------------------------------------------//
    
-    ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
-    ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
+    ptboBound.loadGeoJson('https://raw.githubusercontent.com/le0nard0/ptbo-comunitymap/master/Data/PTBO_Boundary.geojson');
+    ptboAreas.loadGeoJson('https://raw.githubusercontent.com/le0nard0/ptbo-comunitymap/master/Data/CommunityAreas.geojson');
     ptboCatholicElementary.loadGeoJson('https://raw.githubusercontent.com/le0nard0/ptbo-comunitymap/master/Data/CElementary.geojson');
-    ptboCatholicSecondary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CSecondary.geojson')
+    ptboCatholicSecondary.loadGeoJson('https://raw.githubusercontent.com/le0nard0/ptbo-comunitymap/master/Data/CSecondary.geojson')
     //ptboPublicElementary.loadGeoJson('')
     //ptboPublicSecondary.loadGeoJson('')
 
