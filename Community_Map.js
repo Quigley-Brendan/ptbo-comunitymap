@@ -29,7 +29,7 @@ function initMap() {
    
     ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
     ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
-    ptboCatholicElementary.loadGeoJson('ptbo-comunitymap/Data/CElementary.geojson');
+    ptboCatholicElementary.loadGeoJson('/Data/CElementary.geojson');
     ptboCatholicSecondary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CSecondary.geojson')
     //ptboPublicElementary.loadGeoJson('')
     //ptboPublicSecondary.loadGeoJson('')
