@@ -27,10 +27,10 @@ function initMap() {
     // Load Layers
     // ---------------------------------------------------------------------------------------------//
    
-    ptboBound.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/PTBO_Boundary.geojson');
-    ptboAreas.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CommunityAreas.geojson');
-    ptboCatholicElementary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CElementary.geojson');
-    ptboCatholicSecondary.loadGeoJson('https://googledrive.com/host/0BxlTeKPFeJ-KbWRRM2VkdTROaU0/CSecondary.geojson')
+    ptboBound.loadGeoJson('https://cdn.rawgit.com/Quigley-Brendan/ptbo-comunitymap/4ec0329b/Data/PTBO_Boundary.geojson');
+    ptboAreas.loadGeoJson('https://cdn.rawgit.com/Quigley-Brendan/ptbo-comunitymap/4ec0329b/Data/CommunityAreas.geojson');
+    ptboCatholicElementary.loadGeoJson('https://cdn.rawgit.com/Quigley-Brendan/ptbo-comunitymap/4ec0329b/Data/CElementary.geojson');
+    ptboCatholicSecondary.loadGeoJson('https://cdn.rawgit.com/Quigley-Brendan/ptbo-comunitymap/4ec0329b/Data/CSecondary.geojson')
     //ptboPublicElementary.loadGeoJson('')
     //ptboPublicSecondary.loadGeoJson('')
 
